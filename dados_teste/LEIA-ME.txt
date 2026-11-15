@@ -1,0 +1,25 @@
+ARQUIVOS DE TESTE DO CTI INSIGHTS
+
+clientes_teste_pronto.xlsx
+  Planilha pronta para o fluxo principal do sistema. Contém 32 clientes válidos,
+  com cabeçalhos reconhecidos pelo upload, códigos únicos e níveis A/B/C.
+
+clientes_teste_pronto.csv
+  Os mesmos 32 registros em CSV UTF-8 com BOM e separador ponto e vírgula.
+
+clientes_teste_com_inconsistencias.xlsx
+  Recorte da planilha recebida da professora, com registros inválidos de propósito
+  para conferir a validação de campos obrigatórios, níveis e códigos duplicados.
+
+IMPORTANTE SOBRE dados_seguros.csv
+  O arquivo original contém apenas os campos RAMO e %, com participação por ramo
+  de seguros. Ele não representa uma base de clientes e não tem os campos
+  obrigatórios do upload (cliente, consultor, nível, faturamento, serviços e data).
+  Por isso, não foi convertido em clientes fictícios. Pode ser usado separadamente
+  como material de análise da aula, mas não como entrada deste fluxo do CTI Insights.
+
+ORIGEM E CUIDADOS
+  Os arquivos originais em Downloads foram preservados. Os dois XLSX enviados
+  eram cópias idênticas. A planilha pronta aproveita os registros válidos do
+  exemplo e corrige o código duplicado da filial para manter os dois registros.
+  Os dados são exemplos de aula, não dados reais de clientes.

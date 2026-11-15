@@ -11,6 +11,11 @@ node_modules
 dist
 dist-ssr
 target/
+backend/data/
+.aws/
+.venv/
+__pycache__/
+*.py[cod]
 *.local
 .env
 .env.*

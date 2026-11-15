@@ -1,176 +1,79 @@
 <script setup>
 import { onBeforeUnmount, onMounted, ref } from 'vue'
 
-const paginaRolada = ref(false)
+const scrolled = ref(false)
+function updateScroll() { scrolled.value = window.scrollY > 12 }
+onMounted(() => { updateScroll(); window.addEventListener('scroll', updateScroll, { passive: true }) })
+onBeforeUnmount(() => window.removeEventListener('scroll', updateScroll))
 
-function verificarRolagem() {
-  paginaRolada.value = window.scrollY > 12
-}
-
-onMounted(() => {
-  verificarRolagem()
-  window.addEventListener('scroll', verificarRolagem, { passive: true })
-})
-
-onBeforeUnmount(() => {
-  window.removeEventListener('scroll', verificarRolagem)
-})
-
-const etapas = [
-  ['01', 'Importe a planilha', 'Envie a base que sua equipe já utiliza no dia a dia.'],
-  ['02', 'Analise os dados', 'Confira inconsistências e informações relevantes da base.'],
-  ['03', 'Gere resultados', 'Transforme os dados obtidos em uma visão para decidir melhor.']
-]
-
-const beneficios = [
-  ['PLANILHAS', 'Importação direta'],
-  ['ANÁLISE', 'Erros localizados'],
-  ['RESULTADOS', 'Informações organizadas']
+const capabilities = [
+  ['01', 'Importação de planilhas', 'Envie arquivos CSV ou Excel e confira os dados antes do processamento.', 'M12 16V4m-4 4 4-4 4 4M5 15v4h14v-4'],
+  ['02', 'Validação da base', 'Encontre campos incompletos, valores fora do padrão e possíveis duplicidades.', 'M12 9v4m0 4h.01M10 3h4l7 17H3L10 3Z'],
+  ['03', 'Indicadores da carteira', 'Acompanhe faturamento, segmentos e evolução dos resultados.', 'M4 19V9m5 10V5m5 14v-7m5 7V3']
 ]
 </script>
 
 <template>
-  <main class="min-h-screen overflow-hidden bg-[#0d0f10] text-[#e9e7df]">
-    <header :class="[
-      'fixed inset-x-0 top-0 z-50 border-b transition-all duration-300',
-      paginaRolada
-        ? 'border-white/[0.12] bg-[#0d0f10]/72 shadow-[0_8px_30px_rgba(0,0,0,.18)] backdrop-blur-xl'
-        : 'border-white/[0.09] bg-[#0d0f10]'
-    ]">
-      <nav class="mx-auto flex h-20 max-w-7xl items-center justify-between px-5 lg:px-8">
-        <router-link to="/" class="flex items-center gap-3">
-          <img src="/xinsight-logo.jpg" alt="Logo xInsight" class="h-10 w-10 border border-[#6fae55] object-cover object-center" />
-          <span class="leading-none">
-            <strong class="block text-sm tracking-[0.1em] text-[#f3f0e8]">xInsight</strong>
-            <small class="mt-1 block text-[10px] uppercase tracking-[0.16em] text-[#7f8885]">Base comercial</small>
-          </span>
-        </router-link>
-
-        <div class="hidden items-center gap-7 text-[11px] font-bold uppercase tracking-[0.14em] text-[#9da39f] md:flex">
-          <a href="#plataforma" class="transition hover:text-[#b7df9c]">Plataforma</a>
-          <a href="#processo" class="transition hover:text-[#b7df9c]">Processo</a>
-        </div>
-
-        <router-link to="/login" class="border border-[#6fae55] px-4 py-2 text-sm font-bold text-[#b7df9c] transition hover:bg-[#6fae55] hover:text-[#171a1b]">
-          Entrar
-        </router-link>
-      </nav>
+  <main class="landing">
+    <header :class="['landing-nav', scrolled ? 'is-scrolled' : '']">
+      <div class="landing-nav-inner">
+        <router-link to="/" class="landing-brand"><img src="/daxo-wordmark.png" alt="Daxo" /></router-link>
+        <nav class="landing-links"><a href="#plataforma">Plataforma</a><a href="#metodo">Como funciona</a></nav>
+        <router-link to="/login" class="landing-login">Acessar conta <span>↗</span></router-link>
+      </div>
     </header>
 
-    <section class="page-lines relative border-b border-white/[0.09] px-5 pb-16 pt-36 lg:px-8 lg:pb-24 lg:pt-44">
-      <div class="relative mx-auto grid max-w-7xl gap-14 lg:grid-cols-[.82fr_1.18fr] lg:items-center">
-        <div class="relative z-10">
-          <p class="mb-6 flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.18em] text-[#b7df9c]">
-            <span class="h-px w-8 bg-[#6fae55]"></span>
-            Organização de dados comerciais
-          </p>
-          <h1 class="max-w-2xl text-5xl font-semibold leading-[1.02] tracking-[-0.045em] text-[#f4f1e9] sm:text-6xl">
-            Uma base mais clara para decisões menos improvisadas.
-          </h1>
-          <p class="mt-7 max-w-xl text-base leading-7 text-[#a5aaa6] sm:text-lg">
-            O xInsight recebe sua planilha, identifica o que precisa de atenção e entrega uma leitura organizada da carteira comercial.
-          </p>
-          <div class="mt-9 flex flex-wrap gap-4">
-            <router-link to="/login" class="bg-[#6fae55] px-5 py-3 text-sm font-bold text-[#101411] transition hover:bg-[#91c773]">
-              Acessar o painel
-            </router-link>
-            <a href="#processo" class="border border-white/[0.14] px-5 py-3 text-sm font-bold text-[#d5d7d0] transition hover:border-[#6fae55] hover:text-[#b7df9c]">Conhecer o fluxo</a>
-          </div>
+    <section class="landing-hero">
+      <div class="landing-grid-bg" aria-hidden="true"></div>
+      <div class="landing-hero-inner">
+        <div class="hero-copy">
+          <p class="hero-overline">ANÁLISE DA CARTEIRA COMERCIAL</p>
+          <h1>Sua carteira,<br /><em>com mais clareza.</em></h1>
+          <p class="hero-lead">Importe sua planilha, encontre inconsistências e acompanhe os indicadores da sua base em um só lugar.</p>
+          <div class="hero-actions"><router-link to="/login" class="btn-primary">Acessar o painel <span>↗</span></router-link><a href="#metodo" class="hero-text-link">Ver como funciona <span>↓</span></a></div>
         </div>
 
-        <div id="plataforma" class="relative mx-auto w-full max-w-3xl pt-8 lg:pt-0">
-          <div class="float-card float-card-one absolute -left-2 top-2 z-20 hidden border border-[#6fae55]/45 bg-[#191c1d] px-4 py-3 shadow-xl sm:block lg:-left-12">
-            <p class="text-[10px] font-bold uppercase tracking-[.14em] text-[#8f9792]">Conferência</p>
-            <p class="mt-1 text-sm font-bold text-[#b7df9c]">12 ajustes encontrados</p>
+        <div class="hero-visual" aria-label="Prévia do painel de análise">
+          <div class="dashboard-preview">
+            <div class="preview-head"><div><span class="preview-label">VISÃO DA CARTEIRA</span><h2>Resumo do período</h2></div><button aria-label="Mais opções">···</button></div>
+            <div class="preview-metrics"><div><span>CLIENTES ATIVOS</span><b>1.284</b><small>base consolidada</small></div><div><span>FATURAMENTO MÉDIO</span><b>R$ 38,7 mil</b><small>por contrato</small></div></div>
+            <div class="preview-chart-head"><b>Distribuição da carteira</b><span>últimos 12 meses</span></div>
+            <div class="preview-chart"><div class="chart-y"><span>100</span><span>75</span><span>50</span><span>25</span></div><div class="chart-area"><div class="chart-grid"></div><svg viewBox="0 0 500 150" preserveAspectRatio="none" aria-hidden="true"><defs><linearGradient id="areaFill" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#78a889" stop-opacity=".28"/><stop offset="1" stop-color="#78a889" stop-opacity="0"/></linearGradient></defs><path d="M0 118 C35 112 48 75 82 89 S130 115 165 75 S220 82 250 62 S295 79 333 48 S390 75 420 34 S465 49 500 15 V150 H0Z" fill="url(#areaFill)"/><path d="M0 118 C35 112 48 75 82 89 S130 115 165 75 S220 82 250 62 S295 79 333 48 S390 75 420 34 S465 49 500 15" fill="none" stroke="#4d8363" stroke-width="3" vector-effect="non-scaling-stroke"/></svg><div class="chart-x"><span>JAN</span><span>MAR</span><span>MAI</span><span>JUL</span><span>SET</span><span>NOV</span></div></div></div>
           </div>
-
-          <div class="float-card float-card-two absolute -right-1 bottom-14 z-20 hidden border border-white/[0.13] bg-[#191c1d] px-4 py-3 shadow-xl sm:block lg:-right-10">
-            <p class="text-[10px] font-bold uppercase tracking-[.14em] text-[#8f9792]">Base analisada</p>
-            <p class="mt-1 text-sm font-bold text-[#dfe5db]">236 registros aprovados</p>
-          </div>
-
-          <div class="relative rounded-t-xl border-[7px] border-[#292d2e] bg-[#292d2e] p-2 shadow-[0_30px_70px_rgba(0,0,0,.48)]">
-            <div class="absolute left-1/2 top-[2px] h-1.5 w-1.5 -translate-x-1/2 rounded-full bg-[#0c0d0e]"></div>
-            <div class="overflow-hidden rounded-[3px] border border-black/50 bg-[#111314]">
-              <div class="flex h-8 items-center gap-1.5 border-b border-white/[0.08] bg-[#181b1c] px-3">
-                <i class="h-1.5 w-1.5 rounded-full bg-[#527b70]"></i><i class="h-1.5 w-1.5 rounded-full bg-[#82a76d]"></i><i class="h-1.5 w-1.5 rounded-full bg-[#b7df9c]"></i>
-                <span class="ml-3 text-[9px] font-semibold tracking-wide text-[#838a86]">XINSIGHT / DASHBOARD</span>
-              </div>
-              <div class="grid min-h-[300px] grid-cols-[104px_1fr] sm:min-h-[360px] sm:grid-cols-[126px_1fr]">
-                <aside class="border-r border-white/[0.07] bg-[#151819] p-3">
-                  <div class="mb-7 text-[9px] font-bold tracking-[.15em] text-[#91c773]">XI</div>
-                  <div class="space-y-3 text-[9px] text-[#7f8984]">
-                    <p class="border-l-2 border-[#6fae55] pl-2 text-[#ece8de]">Visão geral</p>
-                    <p class="pl-2">Importações</p><p class="pl-2">Relatórios</p><p class="pl-2">Gráficos</p>
-                  </div>
-                </aside>
-                <div class="p-4 sm:p-5">
-                  <div class="flex items-start justify-between">
-                    <div><p class="text-[9px] uppercase tracking-[.15em] text-[#77807c]">Carteira comercial</p><h2 class="mt-1 text-sm font-bold text-[#f2eee6] sm:text-base">Visão geral</h2></div>
-                    <span class="border border-white/[0.1] px-2 py-1 text-[8px] text-[#9ba29d]">Setembro 2026</span>
-                  </div>
-                  <div class="mt-5 grid grid-cols-3 gap-2">
-                    <div class="border border-white/[0.08] bg-[#181b1c] p-2.5"><p class="text-[8px] text-[#818984]">CLIENTES</p><p class="mt-1 text-lg font-bold text-[#f2eee6]">248</p><p class="text-[8px] text-[#829e86]">+ 8 este mês</p></div>
-                    <div class="border border-white/[0.08] bg-[#181b1c] p-2.5"><p class="text-[8px] text-[#818984]">NÍVEL A</p><p class="mt-1 text-lg font-bold text-[#b7df9c]">64</p><p class="text-[8px] text-[#818984]">prioritários</p></div>
-                    <div class="border border-white/[0.08] bg-[#181b1c] p-2.5"><p class="text-[8px] text-[#818984]">PENDÊNCIAS</p><p class="mt-1 text-lg font-bold text-[#91c773]">12</p><p class="text-[8px] text-[#818984]">para revisar</p></div>
-                  </div>
-                  <div class="mt-4 grid gap-3 sm:grid-cols-[1.3fr_.7fr]">
-                    <div class="border border-white/[0.08] bg-[#181b1c] p-3"><p class="text-[9px] font-bold text-[#dfe5db]">Entradas por segmento</p><div class="mt-8 flex h-20 items-end gap-2"><span class="h-[35%] flex-1 bg-[#426a63]"></span><span class="h-[52%] flex-1 bg-[#527b70]"></span><span class="h-[44%] flex-1 bg-[#668b7d]"></span><span class="h-[75%] flex-1 bg-[#6fae55]"></span><span class="h-[61%] flex-1 bg-[#7c9b89]"></span></div></div>
-                    <div class="border border-white/[0.08] bg-[#181b1c] p-3"><p class="text-[9px] font-bold text-[#dfe5db]">Status</p><div class="mt-5 space-y-3 text-[8px]"><div><p class="flex justify-between text-[#9ba29d]"><span>Válidos</span><span>95%</span></p><i class="mt-1 block h-1 bg-[#527b70]"></i></div><div><p class="flex justify-between text-[#9ba29d]"><span>Revisar</span><span>5%</span></p><i class="mt-1 block h-1 w-[18%] bg-[#6fae55]"></i></div></div></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="mx-auto h-5 w-[88%] rounded-b-[50%] border-x-[7px] border-b-[7px] border-[#292d2e] bg-[#1b1e1f]"></div>
-          <div class="mx-auto h-8 w-[18%] border-x-[5px] border-[#292d2e] bg-[#25292a]"></div>
-          <div class="mx-auto h-2 w-[45%] rounded-t-md bg-[#303536]"></div>
         </div>
       </div>
     </section>
 
-    <section class="border-b border-white/[0.09] px-5 py-8 lg:px-8">
-      <div class="mx-auto grid max-w-7xl divide-y divide-white/[0.09] border-y border-white/[0.09] sm:grid-cols-3 sm:divide-x sm:divide-y-0">
-        <div v-for="([valor, texto]) in beneficios" :key="valor" class="px-0 py-4 sm:px-5 sm:first:pl-0">
-          <p class="text-xs font-bold tracking-[.13em] text-[#b7df9c]">{{ valor }}</p><p class="mt-1 text-xs text-[#818984]">{{ texto }}</p>
-        </div>
-      </div>
+    <section id="plataforma" class="landing-section">
+      <div class="section-intro"><div><p class="page-kicker">O QUE VOCÊ ENCONTRA</p><h2>Uma base mais simples<br /><em>de entender.</em></h2></div><p>Reúna importação, conferência e indicadores em um só lugar para acompanhar sua carteira comercial.</p></div>
+      <div class="capability-grid"><article v-for="[numero, titulo, descricao, icon] in capabilities" :key="numero" class="capability-card"><div class="capability-top"><span>{{ numero }}</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path :d="icon"/></svg></div><h3>{{ titulo }}</h3><p>{{ descricao }}</p><span class="capability-arrow">↗</span></article></div>
     </section>
 
-    <section id="processo" class="page-lines px-5 py-16 lg:px-8 lg:py-20">
-      <div class="relative mx-auto max-w-7xl">
-        <div class="max-w-xl"><p class="text-[11px] font-bold uppercase tracking-[.18em] text-[#b7df9c]">Como funciona</p><h2 class="mt-3 text-3xl font-semibold tracking-[-.03em] text-[#f4f1e9] sm:text-4xl">Três etapas, sem complicar sua rotina.</h2></div>
-        <div class="mt-12 grid border-y border-white/[0.1] md:grid-cols-3 md:divide-x md:divide-white/[0.1]">
-          <article v-for="([numero, titulo, descricao]) in etapas" :key="numero" class="border-b border-white/[0.1] py-7 md:border-b-0 md:px-7 md:first:pl-0">
-            <p class="text-[11px] font-bold tracking-[.16em] text-[#91c773]">{{ numero }}</p><h3 class="mt-9 text-lg font-bold text-[#e9e7df]">{{ titulo }}</h3><p class="mt-3 max-w-xs text-sm leading-6 text-[#929a96]">{{ descricao }}</p>
-          </article>
-        </div>
-      </div>
+    <section id="metodo" class="method-section">
+      <div class="method-heading"><p class="page-kicker">UM FLUXO DIRETO</p><h2>Da planilha aos indicadores.</h2><p>Confira cada etapa da análise da sua base.</p></div>
+      <div class="method-steps"><article><span>01</span><div><b>Importe</b><p>Envie a base em CSV ou Excel.</p></div></article><article><span>02</span><div><b>Confira</b><p>Revise os dados e possíveis inconsistências.</p></div></article><article><span>03</span><div><b>Analise</b><p>Acompanhe indicadores e histórico.</p></div></article></div>
+      <div class="method-cta"><div><p class="page-kicker">COMECE POR AQUI</p><h3>Veja o que sua base mostra.</h3><p>Acesse a plataforma e faça uma primeira importação.</p></div><router-link to="/login" class="btn-primary">Acessar Daxo <span>↗</span></router-link></div>
     </section>
-
-    <footer class="border-t border-white/[0.09] px-5 py-7 text-xs text-[#737b77] lg:px-8"><div class="mx-auto flex max-w-7xl flex-col justify-between gap-2 sm:flex-row"><span>xInsight · 2026</span><span>Dados organizados para decisões reais.</span></div></footer>
+    <footer class="landing-footer"><router-link to="/" class="landing-brand"><img src="/daxo-wordmark.png" alt="Daxo" /></router-link><span>Dados organizados para decis&#245;es comerciais.</span><span>&copy; Daxo</span></footer>
   </main>
 </template>
 
-<style scoped>
-.page-lines {
-  background-image: linear-gradient(90deg, transparent calc(50% - 1px), rgba(255, 255, 255, .055) calc(50% - 1px), rgba(255, 255, 255, .055) 50%, transparent 50%);
-}
+<style>
+.landing { overflow: hidden; background: #101914; color: #e4ebe5; }
+.landing-nav { position: fixed; z-index: 30; inset: 0 0 auto; border-bottom: 1px solid transparent; transition: background .2s ease, border-color .2s ease, box-shadow .2s ease; }
+.landing-nav.is-scrolled { border-color: rgba(218,227,218,.1); background: rgba(16,25,20,.86); box-shadow: 0 6px 22px rgba(0,0,0,.16); backdrop-filter: blur(18px); }
+.landing-nav-inner { display: flex; width: min(1280px,100%); height: 76px; align-items: center; justify-content: space-between; margin: auto; padding: 0 36px; }
+.landing-brand { display: flex; align-items: center; gap: 10px; color: #e4ebe5; text-decoration: none; }.landing-brand img { display: block; width: 100px; height: 35px; object-fit: contain; }.landing-brand b { display: block; font-size: 14px; letter-spacing: -.02em; }.landing-brand small { display: block; margin-top: 3px; color: #9dac9f; font-size: 7px; font-weight: 750; letter-spacing: .13em; }
+.landing-links { display: flex; gap: 34px; margin-left: auto; margin-right: 48px; }.landing-links a { color: #aab7ad; font-size: 12px; font-weight: 550; text-decoration: none; }.landing-links a:hover { color: #c5ddc8; }
+.landing-login { display: flex; align-items: center; gap: 16px; padding: 10px 14px; border: 1px solid rgba(145,177,150,.24); border-radius: 11px; color: #d3dfd5; font-size: 11px; font-weight: 700; text-decoration: none; }.landing-login span { font-size: 16px; }
+.landing-hero { position: relative; min-height: 770px; padding: 120px 36px 50px; background: #101914; isolation: isolate; }.landing-grid-bg { position: absolute; z-index: -1; inset: 74px 0 0; overflow: hidden; perspective: 620px; pointer-events: none; }.landing-grid-bg::before { position: absolute; content: ''; top: 24%; right: -24%; bottom: -76%; left: -24%; transform: rotateX(62deg); transform-origin: center top; background-image: linear-gradient(to bottom, rgba(160,190,164,.14) 1px, transparent 1px), linear-gradient(to right, rgba(160,190,164,.08) 1px, transparent 1px); background-size: 100% 48px, 62px 100%; mask-image: linear-gradient(to bottom, transparent 0%, #000 12%, #000 72%, transparent 100%); }.landing-grid-bg::after { position: absolute; content: ''; top: 36%; right: 0; left: 0; height: 1px; background: linear-gradient(90deg, transparent, rgba(165,199,170,.18), transparent); box-shadow: 0 18px 36px rgba(95,144,105,.08); }
+.landing-hero-inner { position: relative; display: grid; width: min(1190px,100%); min-height: 600px; grid-template-columns: .94fr 1.06fr; align-items: center; gap: 36px; margin: auto; }.hero-copy { position: relative; z-index: 2; padding: 0 0 15px; }.hero-overline { display: flex; align-items: center; gap: 9px; color: #a8c5ad; font-size: 9px; font-weight: 750; letter-spacing: .16em; }.hero-overline span { width: 22px; height: 1px; background: #7fa886; }.hero-copy h1 { margin: 21px 0 18px; color: #e7eee8; font-size: clamp(48px,5.3vw,68px); font-weight: 570; letter-spacing: -.07em; line-height: 1.02; }.hero-copy h1 em,.section-intro h2 em { color: #a8c5ad; font-style: normal; }.hero-lead { max-width: 435px; color: #a1aea4; font-size: 15px; line-height: 1.8; }.hero-actions { display: flex; align-items: center; gap: 22px; margin-top: 29px; }.hero-text-link { color: #a8c5ad; font-size: 11px; font-weight: 650; text-decoration: none; }.hero-text-link span { margin-left: 7px; color: #9bc4a2; }
+.hero-visual { position: relative; min-height: 600px; }.dashboard-preview { position: absolute; z-index: 1; top: 50%; left: 50%; width: min(610px,98%); padding: 23px; transform: translate(-50%,-50%) rotateY(-3deg) rotateX(1deg); border: 1px solid rgba(213,229,214,.13); border-radius: 20px; background: rgba(29,39,32,.93); box-shadow: 0 35px 80px rgba(0,0,0,.34), inset 0 1px rgba(255,255,255,.04); backdrop-filter: blur(22px); }
+.preview-head { display: flex; align-items: start; justify-content: space-between; }.preview-label { color: #9ba99e; font-size: 8px; font-weight: 750; letter-spacing: .12em; }.preview-head h2 { margin: 5px 0 0; color: #dfe8e0; font-size: 16px; letter-spacing: -.025em; }.preview-head button { width: 28px; height: 25px; border: 1px solid #344238; border-radius: 8px; background: #1a241d; color: #aab7ad; font-size: 17px; line-height: 10px; }
+.preview-metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 18px; }.preview-metrics div { padding: 12px 13px; border: 1px solid #344238; border-radius: 12px; background: rgba(19,29,22,.76); }.preview-metrics span { display: block; color: #9ba99e; font-size: 7px; font-weight: 750; letter-spacing: .1em; }.preview-metrics b { display: block; margin-top: 8px; color: #e2eae3; font-size: 21px; letter-spacing: -.045em; }.preview-metrics small { color: #9ba99e; font-size: 8px; }.preview-chart-head { display: flex; justify-content: space-between; margin-top: 21px; color: #d4ded5; font-size: 10px; }.preview-chart-head span { color: #9ba99e; font-size: 8px; }.preview-chart { display: flex; height: 167px; gap: 12px; margin-top: 10px; }.chart-y { display: flex; flex-direction: column; justify-content: space-between; padding: 1px 0 26px; color: #9ba99e; font-size: 7px; }.chart-area { position: relative; flex: 1; }.chart-grid { position: absolute; inset: 0 0 23px; display: flex; flex-direction: column; justify-content: space-between; }.chart-grid i { border-top: 1px dashed #344238; }.chart-area svg { position: absolute; inset: 0 0 23px; width: 100%; height: calc(100% - 23px); overflow: visible; }.chart-x { position: absolute; inset: auto 0 0; display: flex; justify-content: space-between; color: #9ba99e; font-size: 7px; }.preview-bottom { display: flex; justify-content: space-between; padding-top: 12px; border-top: 1px solid #344238; color: #a1aea4; font-size: 8px; }.preview-bottom b { font-weight: 500; }
 
-.float-card {
-  animation: deslocar 5s ease-in-out infinite;
-}
-
-.float-card-two {
-  animation-delay: -2.5s;
-}
-
-@keyframes deslocar {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-8px); }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .float-card { animation: none; }
-}
+.landing-section { padding: 105px 36px 112px; background: #121c16; }.section-intro { display: flex; width: min(1160px,100%); align-items: end; justify-content: space-between; gap: 36px; margin: auto auto 41px; }.section-intro h2,.method-heading h2 { margin: 0; color: #e2eae3; font-size: clamp(34px,4vw,48px); font-weight: 580; letter-spacing: -.06em; line-height: 1.08; }.section-intro > p { max-width: 390px; margin: 0 0 4px; color: #a1aea4; font-size: 13px; line-height: 1.75; }.page-kicker { color: #a8c5ad; font-size: 9px; font-weight: 750; letter-spacing: .14em; }.capability-grid { display: grid; width: min(1160px,100%); grid-template-columns: repeat(3,1fr); gap: 15px; margin: auto; }.capability-card { position: relative; min-height: 228px; padding: 25px; border: 1px solid #344238; border-radius: 16px; background: rgba(26,37,29,.82); transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease; }.capability-card:hover { transform: translateY(-4px); border-color: #587461; box-shadow: 0 18px 34px rgba(0,0,0,.2); }.capability-top { display: flex; align-items: center; justify-content: space-between; }.capability-top span { color: #a8c5ad; font-size: 10px; font-weight: 750; }.capability-top svg { width: 22px; height: 22px; color: #92b69a; }.capability-card h3 { margin: 29px 0 8px; color: #e0e8e1; font-size: 16px; font-weight: 650; letter-spacing: -.025em; }.capability-card p { max-width: 290px; margin: 0; color: #a1aea4; font-size: 12px; line-height: 1.7; }.capability-arrow { position: absolute; right: 23px; bottom: 20px; color: #a8c5ad; font-size: 15px; }
+.method-section { padding: 80px 36px 70px; background: #0e1712; }.method-heading { width: min(1160px,100%); margin: auto; }.method-heading > p:last-child { margin: 12px 0 0; color: #a1aea4; font-size: 13px; }.method-steps { display: flex; width: min(980px,100%); align-items: center; gap: 15px; margin: 43px auto 62px; }.method-steps article { display: flex; flex: 1; align-items: center; gap: 14px; }.method-steps article > span { display: grid; width: 39px; height: 39px; flex: 0 0 auto; place-items: center; border: 1px solid #405448; border-radius: 12px; background: #19251d; color: #b6d3ba; font-size: 10px; font-weight: 750; }.method-steps b { color: #dbe5dc; font-size: 12px; }.method-steps p { margin: 4px 0 0; color: #9ba99e; font-size: 10px; }.method-cta { display: flex; width: min(1160px,100%); align-items: center; justify-content: space-between; gap: 24px; margin: auto; padding: 24px 27px; border: 1px solid #344238; border-radius: 16px; background: #19251d; }.method-cta .page-kicker { margin-bottom: 8px; }.method-cta h3 { margin: 0; color: #e0e8e1; font-size: 20px; letter-spacing: -.035em; }.method-cta p:last-child { margin: 6px 0 0; color: #a1aea4; font-size: 11px; }.landing-footer { display: flex; min-height: 92px; align-items: center; justify-content: space-between; gap: 20px; padding: 16px max(36px,calc((100% - 1160px)/2)); background: #101914; }.landing-footer > span { color: #9ba99e; font-size: 9px; }
+@media (max-width: 900px) { .landing-hero { min-height: auto; padding-top: 115px; }.landing-hero-inner { grid-template-columns: 1fr; }.hero-copy { max-width: 630px; }.hero-visual { width: min(650px,100%); min-height: 500px; margin: 0 auto 25px; }.capability-grid { grid-template-columns: 1fr 1fr; }.landing-section { padding-top: 75px; padding-bottom: 80px; } }
+@media (max-width: 620px) { .landing-nav-inner { height: 66px; padding: 0 17px; }.landing-links { display: none; }.landing-login { margin-left: auto; }.landing-hero { padding: 105px 20px 20px; }.hero-copy h1 { font-size: 46px; }.hero-lead { font-size: 13px; }.hero-actions { align-items: start; flex-direction: column; gap: 16px; }.hero-visual { min-height: 390px; margin: 12px -4px 0; }.dashboard-preview { top: 50%; width: 100%; padding: 15px; }.preview-metrics b { font-size: 17px; }.preview-chart { height: 133px; }.landing-section { padding: 67px 20px; }.section-intro { align-items: start; flex-direction: column; gap: 15px; margin-bottom: 26px; }.capability-grid { grid-template-columns: 1fr; }.capability-card { min-height: 190px; }.method-section { padding: 66px 20px 52px; }.method-steps { align-items: stretch; flex-direction: column; gap: 12px; margin: 30px auto 38px; }.method-cta { align-items: start; flex-direction: column; padding: 21px; }.landing-footer { align-items: start; flex-direction: column; padding: 22px 20px; } }
 </style>

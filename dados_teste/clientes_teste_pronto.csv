@@ -1,0 +1,33 @@
+﻿codigo_cliente;nome_cliente;consultor;segmento;nivel_cliente;faturamento_anual;servicos_contratados;data_contratacao;cidade;uf
+CTI002;Comercial Vitória;Carlos Lima;Com?rcio;B;780000;Link Empresarial;2025-02-03;Hortolândia;SP
+CTI003;Logística Rápida;ANA SOUZA;Servi?os;B;1250000;"Internet Dedicada;Backup";2025-02-18;Sumaré;SP
+CTI004;Indústria Alfa;Marcos Reis;Ind?stria;A;3100000;"MPLS;Firewall;Backup";2025-03-05;Campinas;SP
+CTI005;Clínica Bem Estar;Carla Mendes;Sa?de;C;420000;Link Empresarial;2025-03-14;Paulínia;SP
+CTI006;Mercado Central;Carlos Lima;Com?rcio;C;550000;Internet Dedicada;2025-04-02;Hortolândia;SP
+CTI007;Tecnologia Sigma;Marcos Reis;Tecnologia;A;2750000;"Internet Dedicada;Cloud;Firewall";2025-04-21;Campinas;SP
+CTI008;Escola Saber Mais;Carla Mendes;Educa??o;B;890000;"Link Empresarial;Backup";2025-05-09;Sumaré;SP
+CTI009;Construtora Nova Era;Ana Souza;Servi?os;A;4200000;"MPLS;Internet Dedicada";2025-05-28;Campinas;SP
+CTI010;Auto Peças Joao;Carlos Lima;Com?rcio;B;990000;Internet Dedicada;2025-06-11;Hortolândia;SP
+CTI011;Farmácia Popular Mais;Carla Mendes;Com?rcio;C;610000;Link Empresarial;2025-06-25;Campinas;SP
+CTI012;Fábrica Delta;Marcos Reis;Ind?stria;A;5100000;"MPLS;Firewall;Cloud";2025-07-07;Paulínia;SP
+CTI013;Restaurante Sabor & Cia;Ana Souza;Servi?os;C;390000;Link Empresarial;2025-07-19;Campinas;SP
+CTI014;Distribuidora Oeste;Carlos Lima;Servi?os;B;1320000;"Internet Dedicada;Backup";2025-08-04;Sumaré;SP
+CTI015;Hospital Vida;Carla Mendes;Sa?de;A;6900000;"Internet Dedicada;Firewall;Backup";2025-08-23;Campinas;SP
+CTI016;Indústria Ômega;Marcos Reis;IND.;A;3850000;"MPLS;Cloud";2025-09-12;Hortolândia;SP
+CTI017;Loja Estação;Carlos Lima;Com?rcio;C;470000;Link Empresarial;2025-09-29;Campinas;SP
+CTI018;Consultoria Prisma;Ana Souza;Servi?os;B;1170000;"Internet Dedicada;Cloud";2025-10-10;Paulínia;SP
+CTI019;Faculdade Horizonte;Carla Mendes;Educa??o;A;2300000;"Internet Dedicada;Backup;Firewall";2025-10-31;Campinas;SP
+CTI020;E-commerce Box;Marcos Reis;Tecnologia;B;1650000;"Cloud;Firewall";2025-11-17;Sumaré;SP
+CTI021;Móveis Ideal;Ana Souza;Ind?stria;B;1420000;Internet Dedicada;2026-01-08;Hortolândia;SP
+CTI022;Supermercado União;Carlos Lima;Com?rcio;A;3400000;"MPLS;Backup";2026-01-26;Campinas;SP
+CTI023;Laboratório Diagnóstico;Carla Mendes;Sa?de;B;1980000;"Internet Dedicada;Firewall";2026-02-12;Paulínia;SP
+CTI024;Software Nova Geração;Marcos Reis;Tecnologia;A;4600000;"Cloud;Firewall;Backup";2026-02-27;Campinas;SP
+CTI025;Transportes Caminho;Ana Souza;Servi?os;B;1520000;"MPLS;Internet Dedicada";2026-03-16;Sumaré;SP
+CTI026;Magazine Sol;Carlos Lima;Com?rcio;C;680000;Link Empresarial;2026-04-02;Hortolândia;SP
+CTI027;Indústria Prime;Marcos Reis;Ind?stria;A;7200000;"MPLS;Firewall;Cloud;Backup";2026-04-21;Campinas;SP
+CTI028;Centro Educacional Futuro;Carla Mendes;Educa??o;B;1080000;"Internet Dedicada;Backup";2026-05-06;Campinas;SP
+CTI029;Serviços Integrados Max;Ana Souza;Servi?os;B;930000;Internet Dedicada;2026-05-25;Paulínia;SP
+CTI030;Rede Farma;Carla Mendes;Sa?de;A;2850000;"MPLS;Firewall";2026-06-09;Campinas;SP
+CTI034;Loja Ponto Certo;Carlos Lima;Com?rcio;B;710000;Internet Dedicada;2026-08-03;Campinas;SP
+CTI035;Fábrica Nacional;Ana Souza;Ind?stria;A;5450000;"MPLS;Firewall";2026-08-17;Paulínia;SP
+CTI039;Fábrica Nacional - Filial;Ana Souza;Ind?stria;A;2100000;Internet Dedicada;2026-08-18;Hortolândia;SP

@@ -1,64 +1,77 @@
 import { defineStore } from 'pinia'
+import api from '../services/api'
+
+function lerUsuarioSalvo() {
+  try {
+    const salvo = localStorage.getItem('cti_usuario')
+    return salvo ? JSON.parse(salvo) : null
+  } catch {
+    // Um valor antigo ou incompleto no armazenamento não pode impedir o Vue de iniciar.
+    localStorage.removeItem('cti_usuario')
+    return null
+  }
+}
 
 export const useAuthStore = defineStore('auth', {
-  // STATE
-  // Guarda os dados de autenticação usados pela aplicação.
-  state: () => ({
-    logado: localStorage.getItem('cti_logado') === 'true',
-
-    usuario:
-      localStorage.getItem('cti_usuario') || ''
-  }),
-
-  // GETTERS
-  // Calculam informações a partir do state.
-  getters: {
-    nomeExibicao: (state) => {
-      return state.usuario || 'Usuário'
-    },
-
-    estaLogado: (state) => {
-      return state.logado
+  state: () => {
+    const token = localStorage.getItem('cti_token') || ''
+    return {
+      token,
+      usuario: lerUsuarioSalvo(),
+      carregando: false,
+      sessaoVerificada: !token
     }
   },
 
-  // ACTIONS
-  // Executam ações que alteram o state.
+  getters: {
+    nomeExibicao: (state) => state.usuario?.nome || 'Usuário',
+    estaLogado: (state) => Boolean(state.token)
+  },
+
   actions: {
-    login(usuario, senha) {
-      // Para a atividade de front-end,
-      // qualquer usuário e senha preenchidos são aceitos.
-      if (!usuario || !senha) {
+    async login(email, senha) {
+      this.carregando = true
+      try {
+        const { data } = await api.post('/auth/login', { email, senha })
+        this.token = data.token
+        this.usuario = { nome: data.nome, email: data.email, perfil: data.perfil || 'USER' }
+        localStorage.setItem('cti_token', data.token)
+        localStorage.setItem('cti_usuario', JSON.stringify(this.usuario))
+        this.sessaoVerificada = true
+        return data
+      } finally {
+        this.carregando = false
+      }
+    },
+
+    async cadastro(nome, email, senha) {
+      return api.post('/auth/register', { nome, email, senha })
+    },
+
+    async validarSessao() {
+      if (!this.token) {
+        this.sessaoVerificada = true
         return false
       }
-
-      this.logado = true
-      this.usuario = usuario
-
-      localStorage.setItem(
-        'cti_logado',
-        'true'
-      )
-
-      localStorage.setItem(
-        'cti_usuario',
-        usuario
-      )
-
-      return true
+      try {
+        const { data } = await api.get('/auth/me')
+        this.usuario = { nome: data.nome, email: data.email, perfil: data.perfil || 'USER' }
+        localStorage.setItem('cti_usuario', JSON.stringify(this.usuario))
+        return true
+      } catch {
+        this.logout()
+        return false
+      } finally {
+        this.sessaoVerificada = true
+      }
     },
 
     logout() {
-      this.logado = false
-      this.usuario = ''
-
-      localStorage.removeItem(
-        'cti_logado'
-      )
-
-      localStorage.removeItem(
-        'cti_usuario'
-      )
+      this.token = ''
+      this.usuario = null
+      this.sessaoVerificada = true
+      localStorage.removeItem('cti_token')
+      localStorage.removeItem('cti_usuario')
     }
   }
 })

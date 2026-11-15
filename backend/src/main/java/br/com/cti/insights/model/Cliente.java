@@ -12,6 +12,8 @@ public class Cliente {
     private Long id;
 
     private String nome;
+    private String email;
+    private String segmento;
     private String matricula;
 
     @ManyToOne
@@ -41,6 +43,22 @@ public class Cliente {
 
     public void setNome(String nome) {
         this.nome = nome;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getSegmento() {
+        return segmento;
+    }
+
+    public void setSegmento(String segmento) {
+        this.segmento = segmento;
     }
 
     public String getMatricula() {
