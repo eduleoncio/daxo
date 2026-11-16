@@ -157,13 +157,19 @@ def _migrar_relacionamentos_antigos(engine) -> None:
         """))
 
 
-def gravar_resultado(engine, nome_arquivo: str, recebidas: int, rejeitadas: int, linhas: list[dict], resultado: dict) -> int:
+def reservar_lote(engine, nome_arquivo: str, recebidas: int) -> int:
     agora = datetime.now(timezone.utc)
     with engine.begin() as conexao:
         lote_id = conexao.execute(insert(upload_lote).values(
             arquivo_nome=nome_arquivo, status="PROCESSANDO", total_linhas=recebidas,
-            linhas_validas=len(linhas), linhas_invalidas=rejeitadas, criado_em=agora,
+            linhas_validas=0, linhas_invalidas=0, criado_em=agora,
         ).returning(upload_lote.c.id)).scalar_one()
+
+    return lote_id
+
+
+def gravar_resultado(engine, lote_id: int, rejeitadas: int, linhas: list[dict], resultado: dict) -> None:
+    with engine.begin() as conexao:
         def id_dimensao(tabela, nome: str) -> int:
             existente = conexao.execute(select(tabela.c.id).where(tabela.c.nome == nome)).scalar_one_or_none()
             if existente is not None:
@@ -192,16 +198,16 @@ def gravar_resultado(engine, nome_arquivo: str, recebidas: int, rejeitadas: int,
                     data_contratacao=item["data_contratacao"],
                 ))
         conexao.execute(insert(estatistica_lote).values(lote_id=lote_id, resultado=resultado))
-        conexao.execute(upload_lote.update().where(upload_lote.c.id == lote_id).values(status="PROCESSADO"))
-    return lote_id
+        conexao.execute(upload_lote.update().where(upload_lote.c.id == lote_id).values(
+            status="PROCESSADO", linhas_validas=len(linhas), linhas_invalidas=rejeitadas,
+            mensagem=None,
+        ))
 
 
-def gravar_erro(engine, nome_arquivo: str, recebidas: int, mensagem: str) -> None:
+def marcar_erro(engine, lote_id: int, mensagem: str) -> None:
     with engine.begin() as conexao:
-        conexao.execute(insert(upload_lote).values(
-            arquivo_nome=nome_arquivo, status="ERRO", total_linhas=recebidas,
-            linhas_validas=0, linhas_invalidas=recebidas,
-            mensagem=mensagem[:500], criado_em=datetime.now(timezone.utc),
+        conexao.execute(upload_lote.update().where(upload_lote.c.id == lote_id).values(
+            status="ERRO", mensagem=mensagem[:500],
         ))
 
 

@@ -96,10 +96,17 @@ def tratar(linhas: list[dict]) -> tuple[list[dict], list[dict], dict[str, int]]:
     rejeitadas: list[dict] = []
     correcoes: dict[str, int] = {}
 
-    for indice, original in enumerate(linhas, start=1):
-        linha = {re.sub(r"(?<!^)(?=[A-Z])", "_", str(chave)).lower(): valor for chave, valor in original.items()}
+    frame = pd.DataFrame.from_records(linhas)
+    frame.columns = [
+        re.sub(r"(?<!^)(?=[A-Z])", "_", str(coluna)).lower()
+        for coluna in frame.columns
+    ]
+
+    for indice, original in enumerate(frame.to_dict(orient="records"), start=1):
+        linha = original
         registro = {coluna: limpar_texto(linha.get(coluna)) for coluna in COLUNAS}
-        registro["linha"] = linha.get("linha", indice)
+        numero_linha = linha.get("linha")
+        registro["linha"] = indice if _vazio(numero_linha) else numero_linha
 
         problemas = [campo for campo in OBRIGATORIAS if not registro[campo]]
         faturamento = _numero(linha.get("faturamento_anual"))

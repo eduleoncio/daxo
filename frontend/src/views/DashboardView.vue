@@ -1,6 +1,7 @@
 <script setup>
 import { computed, onMounted } from 'vue'
 import BaseChart from '../components/BaseChart.vue'
+import PdfReportButton from '../components/PdfReportButton.vue'
 import { useUploadStore } from '../stores/uploadStore'
 
 const upload = useUploadStore()
@@ -16,7 +17,7 @@ const faturamentoTotal = computed(() => upload.estatisticas?.resumo?.faturamento
   <main class="dashboard-page page-wrap">
     <header class="page-head">
       <div><p class="page-kicker">CENTRAL DE ANÁLISE</p><h1 class="page-title">Visão da carteira</h1><p class="page-description">Acompanhe os principais números da sua base e entenda como ela está distribuída.</p></div>
-      <router-link to="/upload" class="btn-primary"><span>＋</span> Importar planilha</router-link>
+      <div class="dashboard-head-actions"><PdfReportButton :estatisticas="upload.estatisticas" :lote="upload.lote" :arquivo="upload.arquivo?.name" :erros="upload.erros"/><router-link to="/upload" class="btn-primary"><span>＋</span> Importar planilha</router-link></div>
     </header>
 
     <section v-if="upload.lote" class="batch-bar glass-panel">
@@ -53,6 +54,7 @@ const faturamentoTotal = computed(() => upload.estatisticas?.resumo?.faturamento
 
 <style>
 .dashboard-page { color: var(--ink); }
+.dashboard-head-actions { display: flex; align-items: center; justify-content: flex-end; gap: 10px; flex-wrap: wrap; }
 .batch-bar { display: flex; align-items: center; justify-content: space-between; gap: 20px; margin: -4px 0 17px; padding: 13px 18px; border-radius: 15px; }
 .batch-status { display: flex; align-items: center; gap: 11px; }.batch-check { display: grid; width: 33px; height: 33px; place-items: center; border-radius: 11px; background: #e4f0e5; color: #3e7952; font-size: 14px; }.batch-status .eyebrow { margin: 0 0 4px; font-size: 8px; }.batch-status b { display: block; color: #3e4c42; font-size: 11px; }.batch-status small { display: block; margin-top: 4px; color: #a46143; font-size: 10px; }.status-chip { margin-left: 6px; padding: 3px 6px; border-radius: 5px; background: #e5f0e5; color: #39734d; letter-spacing: .02em; }
 .metrics-grid { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 13px; }.metric-heading { display: flex; align-items: center; justify-content: space-between; margin-bottom: 17px; }.metric-icon { display: grid; width: 36px; height: 36px; place-items: center; border-radius: 12px; }.metric-icon svg { width: 18px; height: 18px; }.metric-icon.green { background: #e3efe5; color: #427351; }.metric-icon.sand { background: #f3eddf; color: #947349; }.metric-icon.blue { background: #e7edf0; color: #5c7584; }.metric-icon.coral { background: #f5e9e3; color: #a7684b; }.metric-delta { color: #89a38e; font-size: 8px; font-weight: 750; letter-spacing: .08em; }.metric-money { font-size: clamp(18px,2vw,25px); }.metric-link { display: block; color: inherit; text-decoration: none; transition: transform .18s ease, border-color .18s ease; }.metric-link:hover { transform: translateY(-2px); border-color: #d6e5d9; }.metric-arrow { color: #93a099; font-size: 15px; }
@@ -60,5 +62,5 @@ const faturamentoTotal = computed(() => upload.estatisticas?.resumo?.faturamento
 .priority-list { display: grid; gap: 21px; padding: 22px 0 16px; }.priority-row { display: grid; grid-template-columns: 1fr auto; gap: 10px 14px; align-items: center; }.priority-label { display: flex; align-items: center; gap: 10px; }.priority-label > span { display: grid; width: 31px; height: 31px; place-items: center; border-radius: 10px; font-size: 11px; font-weight: 750; }.priority-label b { display: block; color: #3e4d42; font-size: 11px; }.priority-label small { display: block; margin-top: 3px; color: #95a098; font-size: 9px; }.priority-value { display: flex; align-items: baseline; gap: 8px; }.priority-value b { color: #3b4b40; font-size: 12px; }.priority-value span { color: #96a198; font-size: 9px; }.priority-track { grid-column: 1/-1; height: 5px; overflow: hidden; border-radius: 10px; background: #edf1ed; }.priority-track i { display: block; height: 100%; border-radius: inherit; }.priority-foot { display: flex; justify-content: space-between; padding-top: 14px; border-top: 1px solid #edf0ed; color: #53785d; font-size: 10px; font-weight: 650; text-decoration: none; }
 .insight-panel { margin-top: 14px; padding: 21px 22px; }.saved-note { display: flex; align-items: center; gap: 7px; color: #829087; font-size: 9px; }.insight-metrics { display: grid; grid-template-columns: repeat(3,1fr); padding: 19px 0; }.insight-metrics > div { display: grid; gap: 7px; padding: 0 17px; border-left: 1px solid #e9eeea; }.insight-metrics > div:first-child { padding-left: 0; border-left: 0; }.insight-metrics span { color: #89958d; font-size: 10px; }.insight-metrics b { color: #314638; font-size: 17px; letter-spacing: -.03em; }.insight-list { display: grid; gap: 8px; margin: 0; padding: 14px 0 0 17px; border-top: 1px solid #edf0ed; color: #65736a; font-size: 11px; line-height: 1.6; }.insight-list li::marker { color: #5d8a65; }
 @media (max-width: 1100px) { .metrics-grid { grid-template-columns: repeat(2,1fr); } }
-@media (max-width: 760px) { .dashboard-grid { grid-template-columns: 1fr; }.dashboard-panel { min-height: unset; }.metrics-grid { gap: 9px; }.metric-card { min-height: 130px; padding: 15px; }.metric-heading { margin-bottom: 13px; }.metric-money { font-size: 18px; }.batch-bar { align-items: start; flex-direction: column; }.insight-metrics { grid-template-columns: 1fr; gap: 13px; }.insight-metrics > div { padding: 0; border: 0; }.saved-note { display: none; } }
+@media (max-width: 760px) { .dashboard-head-actions { justify-content: flex-start; }.dashboard-grid { grid-template-columns: 1fr; }.dashboard-panel { min-height: unset; }.metrics-grid { gap: 9px; }.metric-card { min-height: 130px; padding: 15px; }.metric-heading { margin-bottom: 13px; }.metric-money { font-size: 18px; }.batch-bar { align-items: start; flex-direction: column; }.insight-metrics { grid-template-columns: 1fr; gap: 13px; }.insight-metrics > div { padding: 0; border: 0; }.saved-note { display: none; } }
 </style>

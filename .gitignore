@@ -19,6 +19,7 @@ __pycache__/
 *.local
 .env
 .env.*
+!.env.example
 application-local.properties
 
 # Editor directories and files

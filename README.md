@@ -1,25 +1,66 @@
-# CTI Insights
+<div align="center">
+  <img src="frontend/public/daxo-mark.png" alt="Símbolo Daxo" width="92" />
+  <h1>Daxo</h1>
+  <p><strong>Dados claros. Decisões melhores.</strong></p>
+  <p>Plataforma de análise de carteira comercial</p>
+</div>
 
-Projeto do curso dividido em três partes:
+<p align="center">
+  <img src="https://img.shields.io/badge/Vue.js-3-42b883?logo=vuedotjs&logoColor=white" alt="Vue 3" />
+  <img src="https://img.shields.io/badge/Java-21-f89820?logo=openjdk&logoColor=white" alt="Java 21" />
+  <img src="https://img.shields.io/badge/Spring%20Boot-3-6db33f?logo=springboot&logoColor=white" alt="Spring Boot 3" />
+  <img src="https://img.shields.io/badge/Python-FastAPI-009688?logo=fastapi&logoColor=white" alt="Python e FastAPI" />
+</p>
 
-- `frontend/`: aplicação Vue 3 para login, upload, validação e visualização dos resultados.
-- `backend/`: API Spring Boot que valida os dados recebidos e encaminha o lote ao Python.
-- `analytics-python/`: API FastAPI que limpa os dados, calcula estatísticas, gera insights e grava cada lote.
+## Sobre o projeto
 
-## Executar localmente no Windows (CMD)
+Daxo transforma planilhas comerciais em uma visão organizada da carteira. A aplicação valida os registros, processa os dados e apresenta indicadores que ajudam a identificar segmentos, prioridades e oportunidades de atendimento.
 
-Abra três janelas do Prompt de Comando na pasta do projeto. O DBeaver não precisa estar aberto. Sem perfil adicional, o Spring usa H2 local e o Python usa SQLite.
+## O que você encontra
 
-### 1. Serviço Python
+- Cadastro e login com autenticação por token.
+- Importação de arquivos CSV e Excel, com validação dos campos e dos registros.
+- Painel com faturamento, clientes, segmentos e níveis de prioridade.
+- Indicadores gráficos por segmento, nível, consultor, serviço e período.
+- Maiores faturamentos, estatísticas e histórico dos lotes processados.
+- Relatório das inconsistências encontradas durante a importação.
+- Relatório analítico pronto para impressão ou para salvar em PDF.
+
+## Como funciona
+
+```text
+Vue 3  →  Spring Boot  →  FastAPI  →  Banco de dados
+           valida e        limpa, calcula
+           coordena        e persiste
+```
+
+O frontend conversa com a API Java. O backend valida os dados e encaminha os registros para o serviço Python, que calcula e armazena os indicadores. O backend consulta o serviço Python para entregar os resultados ao painel.
+
+## Tecnologias
+
+| Parte | Tecnologias |
+| --- | --- |
+| Frontend | Vue 3, Vite, Pinia, Axios e Chart.js |
+| Backend | Java 21, Spring Boot, Spring Security e JWT |
+| Análise | Python, FastAPI, Pandas, NumPy, SciPy e SQLAlchemy |
+| Banco local | H2 para o backend e SQLite para o serviço Python |
+| Banco remoto | PostgreSQL, incluindo Azure Database for PostgreSQL |
+
+## Executar no Windows
+
+Você vai precisar de **Node.js e npm**, **Java 21 e Maven** e **Python 3.11 ou superior**. Inicie cada serviço em uma janela separada do Prompt de Comando, a partir da pasta do projeto.
+
+### 1. Serviço de análise Python
 
 ```cmd
 cd analytics-python
+python -m venv .venv
 .venv\Scripts\activate.bat
 pip install -r requirements.txt
-uvicorn api:app --port 8000 --reload
+uvicorn api:app --reload --port 8000
 ```
 
-Se a pasta `.venv` ainda não existir, crie-a antes com `python -m venv .venv`. Sem `DB_HOST`, o Python usa `analytics-python/data/cti_insights.db`.
+O banco SQLite local é criado automaticamente em `analytics-python/data/`. Para conferir a conexão configurada, rode `python testar_conexao.py` com o ambiente virtual ativo. Se ele já existir, basta ativá-lo e iniciar o Uvicorn.
 
 ### 2. Backend Java
 
@@ -29,31 +70,9 @@ mvn -DskipTests package
 java -jar target\cti-insights-0.0.1-SNAPSHOT.jar
 ```
 
-Use o JAR porque `mvn spring-boot:run` pode falhar quando o caminho do projeto contém caracteres acentuados no Windows. A compilação do JAR funciona nesse caminho. O banco H2 local fica em `backend/data/cti-insights`.
+O backend inicia na porta `8080` e usa H2 local por padrão. Para executar esse comando, mantenha o terminal na pasta `backend`.
 
-O Azure é opcional. Para usá-lo, configure `DB_HOST`, `DB_NAME`, `DB_USER`,
-`DB_PASSWORD` e `JWT_SECRET` no CMD do backend, e os mesmos dados em
-`analytics-python/.env`; então inicie com:
-
-```cmd
-java -jar target\cti-insights-0.0.1-SNAPSHOT.jar --spring.profiles.active=azure
-```
-
-O perfil Azure não contém credenciais. O Python e o Java usam configurações de
-banco separadas e ambos precisam apontar para o mesmo banco quando a atividade
-for executada no Azure.
-
-No Azure, inicie o Python antes do Spring. O serviço Python migra a antiga tabela
-de autenticação `consultor` para `usuarios` se encontrar esse esquema legado,
-liberando `consultor` para a dimensão analítica. Contas novas recebem perfil
-`USER`; os endpoints administrativos `/consultores/**` exigem perfil `ADMIN`.
-Para promover uma conta de demonstração pelo DBeaver, depois de criá-la:
-
-```sql
-UPDATE usuarios SET perfil = 'ADMIN' WHERE email = 'seu-email@example.com';
-```
-
-### 3. Frontend Vue
+### 3. Frontend
 
 ```cmd
 cd frontend
@@ -61,19 +80,47 @@ npm install
 npm run dev
 ```
 
-Abra o endereço informado pelo Vite (normalmente `http://localhost:5173`), faça cadastro/login e envie `dados_teste\clientes_teste_pronto.xlsx` ou `dados_teste\clientes_teste_pronto.csv` na tela de importação.
+Abra o endereço mostrado pelo Vite, normalmente `http://localhost:5173`.
 
-## Rotas da atividade
+## Primeiro acesso
 
-- `POST /api/clientes/validar`: validação do DTO e padronização da aula 10, sem persistir.
-- `POST /api/clientes/analisar`: valida no Spring, chama o FastAPI, grava o lote e devolve os indicadores.
-- `GET /api/dashboard`: lê do Python os indicadores do último lote persistido.
-- `GET /api/dashboard?loteId=1`: carrega um lote específico.
-- `GET /api/dashboard/lotes`: lista o histórico de envios para seleção no dashboard.
-- `GET http://localhost:8000/saude`: verifica se o serviço Python está ativo.
-- `POST http://localhost:8000/testar`: transforma e calcula sem gravar no banco. Use o JSON de `analytics-python/amostras/clientes.json` em `/docs`.
-- `POST http://localhost:8000/etl`: recebe o lote do Spring e grava os clientes, contratos e estatísticas.
-- `GET http://localhost:8000/lotes`: lista os últimos lotes persistidos.
-- `GET http://localhost:8000/lotes/{id}`: lê o status e as estatísticas de um lote.
+1. Abra o Daxo e crie uma conta.
+2. Entre com a conta cadastrada.
+3. Importe `dados_teste\clientes_teste_pronto.xlsx` para ver o fluxo completo.
+4. Use `dados_teste\clientes_teste_com_inconsistencias.xlsx` para conferir os avisos de validação.
 
-O FastAPI publica a documentação interativa em `http://localhost:8000/docs`. O dashboard e a página de gráficos carregam os indicadores persistidos do lote mais recente. Os arquivos de exemplo e a incompatibilidade do CSV original de seguros estão documentados em `dados_teste/LEIA-ME.txt`.
+Os arquivos em `dados_teste/` são exemplos para demonstração e desenvolvimento.
+Nas telas Painel, Indicadores e Relatórios, use **Salvar análise em PDF** e escolha **Salvar como PDF** na janela de impressão do navegador.
+
+## Endereços locais
+
+| Serviço | Endereço |
+| --- | --- |
+| Aplicação | `http://localhost:5173` |
+| API Java | `http://localhost:8080` |
+| Documentação interativa Python | `http://localhost:8000/docs` |
+| Verificação de saúde Python | `http://localhost:8000/saude` |
+
+## Configuração de banco remoto
+
+O Azure é opcional. Para usar PostgreSQL remoto, copie `analytics-python/.env.example` para `analytics-python/.env` e preencha as credenciais. O arquivo `database/schema.sql` documenta a estrutura PostgreSQL; o Python cria as tabelas automaticamente ao iniciar. Configure também o backend para o mesmo banco e use o perfil Spring `azure`:
+
+```cmd
+java -jar target\cti-insights-0.0.1-SNAPSHOT.jar --spring.profiles.active=azure
+```
+
+Não coloque senhas, tokens ou arquivos `.env` no GitHub. Use valores próprios no seu ambiente local.
+
+## Estrutura do repositório
+
+```text
+├── analytics-python/   # API FastAPI, análise e persistência dos lotes
+├── backend/            # API Spring Boot, autenticação e integração
+├── database/           # Esquema PostgreSQL de referência
+├── dados_teste/        # Planilhas de demonstração
+└── frontend/           # Aplicação Vue e interface do Daxo
+```
+
+---
+
+<p align="center">Feito para transformar dados em decisões mais claras.</p>

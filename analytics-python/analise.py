@@ -1,16 +1,20 @@
 """Cálculos estatísticos e agrupamentos consumidos pelo dashboard."""
 
 from collections import Counter
-from statistics import mean, median, pstdev
 
 import numpy as np
+import pandas as pd
 from scipy.stats import pearsonr
 
 from insights import gerar
 
 
 def calcular(linhas: list[dict], total_recebidas: int, rejeitadas: int = 0, correcoes=None) -> dict:
-    faturamentos = [float(linha["faturamento_anual"]) for linha in linhas]
+    frame = pd.DataFrame.from_records(linhas)
+    if "faturamento_anual" not in frame:
+        frame["faturamento_anual"] = pd.Series(dtype="float64")
+    faturamento = pd.to_numeric(frame["faturamento_anual"], errors="coerce").dropna()
+    faturamentos = faturamento.tolist()
     servicos = Counter(servico for linha in linhas for servico in linha["servicos_contratados"])
     servicos_por_cliente = [len(linha["servicos_contratados"]) for linha in linhas]
     correlacao = {"coeficiente": None, "pValor": None}
@@ -31,11 +35,12 @@ def calcular(linhas: list[dict], total_recebidas: int, rejeitadas: int = 0, corr
     valores = {
         "resumo": {
             "clientes": len(linhas), "recebidas": total_recebidas, "invalidas": rejeitadas,
-            "faturamentoTotal": sum(faturamentos),
-            "media": mean(faturamentos) if faturamentos else 0,
-            "mediana": median(faturamentos) if faturamentos else 0,
-            "desvioPadrao": pstdev(faturamentos) if len(faturamentos) > 1 else 0,
-            "minimo": min(faturamentos, default=0), "maximo": max(faturamentos, default=0),
+            "faturamentoTotal": float(faturamento.sum()),
+            "media": float(faturamento.mean()) if not faturamento.empty else 0,
+            "mediana": float(faturamento.median()) if not faturamento.empty else 0,
+            "desvioPadrao": float(faturamento.std(ddof=0)) if len(faturamento) > 1 else 0,
+            "minimo": float(faturamento.min()) if not faturamento.empty else 0,
+            "maximo": float(faturamento.max()) if not faturamento.empty else 0,
             "quartis": {"q1": float(np.percentile(faturamentos, 25)) if faturamentos else 0,
                         "q2": float(np.percentile(faturamentos, 50)) if faturamentos else 0,
                         "q3": float(np.percentile(faturamentos, 75)) if faturamentos else 0},
